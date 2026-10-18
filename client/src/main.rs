@@ -24,7 +24,7 @@ pub struct AuthRequest {
 #[get("/login")]
 async fn login() -> impl Responder {
     let scope = String::from("user-read-currently-playing user-modify-playback-state playlist-read-private playlist-read-collaborative user-read-playback-state user-library-read user-modify-playback-state user-top-read");
-    let redirect_uri = String::from("http://localhost:8888/api/v1/callback");
+    let redirect_uri = String::from("http://127.0.0.1:8888/api/v1/callback");
     let client_id = dotenv::var("SPOTIFY_CLIENT_ID").expect("SPOTIFY_CLIENT_ID not set in .env");
 
     let redirect_url = format!("https://accounts.spotify.com/authorize?response_type=code&client_id={}&scope={}&redirect_uri={}", client_id, scope, redirect_uri);
@@ -48,7 +48,7 @@ async fn callback(info: web::Query<AuthRequest>) -> impl Responder {
         .form(&[
             ("grant_type", "authorization_code"),
             ("code", &code),
-            ("redirect_uri", "http://localhost:8888/api/v1/callback"),
+            ("redirect_uri", "http://127.0.0.1:8888/api/v1/callback"),
         ]);
 
     let token_response = token_request.send().await.unwrap().text().await.unwrap();
